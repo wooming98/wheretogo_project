@@ -125,6 +125,7 @@ public class MemberController {
 
         // 토큰 만료시간을 현재 시간과 비교
         if(service.isTokenExpired(memberId)) {
+            System.out.println("아니라고?");
             return ResponseEntity.notFound().build();
         }
 
