@@ -14,6 +14,7 @@ public interface MemberMapper {
             INSERT INTO member (email, password, nickname, name, gender, birth, address, phonenumber)
             VALUES (#{email}, #{password}, #{nickName}, #{name}, #{gender}, #{birth}, #{address}, #{phoneNumber})
             """)
+    @Options(useGeneratedKeys = true, keyProperty = "memberId")
     int insertMember(Member member);
 
     // 이메일 중복 체크

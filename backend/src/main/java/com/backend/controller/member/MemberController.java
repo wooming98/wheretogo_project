@@ -35,7 +35,7 @@ public class MemberController {
                                  MultipartFile file) throws IOException {
         if (service.validate(member)) {
             service.addMember(member, file);
-            int memberId = service.selectByLastMemberId(member);
+            int memberId = member.getMemberId();
             service.addAuthority(memberId);
             return ResponseEntity.ok().build();
         } else {
