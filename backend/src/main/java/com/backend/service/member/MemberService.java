@@ -258,7 +258,29 @@ public class MemberService {
 
         JwtClaimsSet jwtClaimsSet = jwtClaimsSetBuilder.build();
         token = jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
-        return Map.of("token", token);
+
+        Map<String, Object> result = new HashMap<>();
+
+        Member db = mapper.selectByEmail(member.getEmail());
+
+        Instant now = Instant.now();
+
+        // 리프레시 토큰 생성
+        JwtClaimsSet refreshClaims = JwtClaimsSet.builder()
+                .issuer("self")
+                .issuedAt(now)
+                .expiresAt(now.plusSeconds(60 * 60 * 24 * 7))
+                .subject(db.getMemberId().toString())
+                .build();
+
+        // 인코딩 된 jwk 변수에 할당
+        String refreshToken = jwtEncoder.encode(JwtEncoderParameters.from(refreshClaims)).getTokenValue();
+
+
+        result.put("accessToken", token);
+        result.put("refreshToken", refreshToken);
+
+        return result;
     }
 
     public void deleteMember(Integer memberId) {
